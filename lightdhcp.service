@@ -1,0 +1,18 @@
+#
+# lightdhcp.service
+#
+# by Andreas Steinmetz, 2020
+#
+# This file is put in the public domain. Have fun!
+#
+[Unit]
+Description=wrapped dhcpcd on LAN interface
+Wants=network.target
+Before=network.target
+
+[Service]
+Type=forking
+ExecStart=/sbin/lightdhcp -d -t 5 -a 5 -s -m 4 -M 4 -i -p
+
+[Install]
+WantedBy=multi-user.target

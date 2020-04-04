@@ -1,0 +1,100 @@
+This file is part of the lightdhcp project
+(C) 2020 Andreas Steinmetz, ast@domdv.de
+The dhcpcd license applies.
+
+diff -rNu dhcpcd-dhcpcd-8.1.6/configure.sh dhcpcd-8.1.6/configure.sh
+--- dhcpcd-dhcpcd-8.1.6/configure.sh	1970-01-01 01:00:00.000000000 +0100
++++ dhcpcd-8.1.6/configure.sh	2020-04-01 10:55:57.553177641 +0200
+@@ -0,0 +1,2 @@
++#!/bin/sh
++exec ./configure --dbdir=/var/lib/dhcpcd5 --rundir=/run --libexecdir=/lib/dhcpcd CFLAGS="-Os -DSCRIPT=NULL"
+diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcpcd.c dhcpcd-8.1.6/src/dhcpcd.c
+--- dhcpcd-dhcpcd-8.1.6/src/dhcpcd.c	2020-01-27 21:22:21.000000000 +0100
++++ dhcpcd-8.1.6/src/dhcpcd.c	2020-04-01 10:55:57.555177607 +0200
+@@ -1989,6 +1989,7 @@
+ 		goto exit_failure;
+ 	}
+ #endif
++	if(!ifo->script)usleep(500000);
+ 
+ 	logdebugx(PACKAGE "-" VERSION " starting");
+ 	ctx.options |= DHCPCD_STARTED;
+diff -rNu dhcpcd-dhcpcd-8.1.6/src/duid.c dhcpcd-8.1.6/src/duid.c
+--- dhcpcd-dhcpcd-8.1.6/src/duid.c	2020-01-27 21:22:21.000000000 +0100
++++ dhcpcd-8.1.6/src/duid.c	2020-04-01 11:19:48.087200834 +0200
+@@ -57,6 +57,7 @@
+ #include "duid.h"
+ #include "logerr.h"
+ 
++#if 0
+ static size_t
+ duid_machineuuid(char *uuid, size_t uuid_len)
+ {
+@@ -117,6 +118,7 @@
+ 	l += hwaddr_aton(d, uuid);
+ 	return l;
+ }
++#endif
+ 
+ static size_t
+ duid_make(uint8_t *d, const struct interface *ifp, uint16_t type)
+@@ -151,6 +153,7 @@
+ static size_t
+ duid_get(uint8_t **d, const struct interface *ifp)
+ {
++#if 0
+ 	FILE *fp;
+ 	uint8_t *data;
+ 	size_t len;
+@@ -217,6 +220,17 @@
+ 		return duid_make(data, ifp, DUID_LL);
+ 	}
+ 	return len;
++#else
++	uint8_t *data;
++
++	if ((data = malloc(DUID_LEN)) == NULL) {
++		logerr(__func__);
++		return 0;
++	}
++	memset(data,0,DUID_LEN);
++	*d = data;
++	return duid_make(data, ifp, DUID_LL);
++#endif
+ }
+ 
+ size_t duid_init(const struct interface *ifp)
+diff -rNu dhcpcd-dhcpcd-8.1.6/src/if-linux.c dhcpcd-8.1.6/src/if-linux.c
+--- dhcpcd-dhcpcd-8.1.6/src/if-linux.c	2020-01-27 21:22:21.000000000 +0100
++++ dhcpcd-8.1.6/src/if-linux.c	2020-04-01 10:55:57.557177573 +0200
+@@ -1505,6 +1505,12 @@
+ 		return -1;
+ #undef SF
+ 
++#ifdef PACKET_IGNORE_OUTGOING
++	n=1;
++	if(setsockopt(s,SOL_PACKET,PACKET_IGNORE_OUTGOING,&s,sizeof(s)))
++		goto eexit;
++#endif
++
+ 	/* We cannot validate the correct interface,
+ 	 * so we MUST set this first. */
+ 	if (bind(s, &su.sa, sizeof(su.sll)) == -1)
+@@ -1955,6 +1961,7 @@
+ int
+ ip6_forwarding(const char *ifname)
+ {
++#if 0
+ 	char path[256];
+ 	int val;
+ 
+@@ -1963,6 +1970,9 @@
+ 	snprintf(path, sizeof(path), "%s/%s/forwarding", p_conf, ifname);
+ 	val = check_proc_int(path);
+ 	return val == -1 ? 0 : val;
++#else
++	return 0;
++#endif
+ }
+ 
+ #endif /* INET6 */
