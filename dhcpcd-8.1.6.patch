@@ -3,7 +3,7 @@ diff -rNu dhcpcd-dhcpcd-8.1.6/configure.sh dhcpcd-8.1.6/configure.sh
 +++ dhcpcd-8.1.6/configure.sh	2020-04-05 15:32:57.300578550 +0200
 @@ -0,0 +1,2 @@
 +#!/bin/sh
-+exec ./configure --dbdir=/var/lib/dhcpcd5 --rundir=/run --libexecdir=/lib/dhcpcd CFLAGS="-Os -DSCRIPT=NULL"
++exec ./configure --dbdir=/var/lib/dhcpcd5 --rundir=/run --libexecdir=/lib/dhcpcd CFLAGS="-Os $* -DSCRIPT=NULL"
 diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcp6.c dhcpcd-8.1.6/src/dhcp6.c
 --- dhcpcd-dhcpcd-8.1.6/src/dhcp6.c	2020-01-27 21:22:21.000000000 +0100
 +++ dhcpcd-8.1.6/src/dhcp6.c	2020-04-05 15:33:07.104694466 +0200

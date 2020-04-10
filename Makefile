@@ -5,11 +5,16 @@
 # your choice, any later version of this license.
 #
 DHCPCD=8.1.6
+OPTS=
+#
+# Enable the following for Raspberry Pi 4B
+#
+# OPTS=-march=native -mthumb -fomit-frame-pointer -fno-stack-protector
 
 all: dhcpcd lightdhcp
 
 lightdhcp: lightdhcp.c
-	gcc -Wall -Os -s -o lightdhcp lightdhcp.c
+	gcc -Wall -Os $(OPTS) -s -o lightdhcp lightdhcp.c
 
 dhcpcd: dhcpcd-dhcpcd-$(DHCPCD)/src/dhcpcd
 	cp dhcpcd-dhcpcd-$(DHCPCD)/src/dhcpcd dhcpcd
@@ -20,7 +25,7 @@ dhcpcd-dhcpcd-$(DHCPCD)/src/dhcpcd: dhcpcd-dhcpcd-$(DHCPCD)/config.h
 
 dhcpcd-dhcpcd-$(DHCPCD)/config.h: dhcpcd-dhcpcd-$(DHCPCD)/configure.sh
 	cd dhcpcd-dhcpcd-$(DHCPCD) && chmod +x ./configure.sh
-	cd dhcpcd-dhcpcd-$(DHCPCD) && ./configure.sh
+	cd dhcpcd-dhcpcd-$(DHCPCD) && ./configure.sh $(OPTS)
 
 dhcpcd-dhcpcd-$(DHCPCD)/configure.sh: dhcpcd-$(DHCPCD).tar.gz \
 	dhcpcd-$(DHCPCD).patch
