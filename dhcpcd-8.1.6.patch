@@ -1,12 +1,12 @@
 diff -rNu dhcpcd-dhcpcd-8.1.6/configure.sh dhcpcd-8.1.6/configure.sh
 --- dhcpcd-dhcpcd-8.1.6/configure.sh	1970-01-01 01:00:00.000000000 +0100
-+++ dhcpcd-8.1.6/configure.sh	2020-04-11 14:51:30.196495174 +0200
++++ dhcpcd-8.1.6/configure.sh	2020-04-17 15:46:07.594901213 +0200
 @@ -0,0 +1,2 @@
 +#!/bin/sh
 +exec ./configure --dbdir=/var/lib/dhcpcd5 --rundir=/run --libexecdir=/lib/dhcpcd CFLAGS="-Os $* -DSCRIPT=NULL"
 diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcp6.c dhcpcd-8.1.6/src/dhcp6.c
 --- dhcpcd-dhcpcd-8.1.6/src/dhcp6.c	2020-01-27 21:22:21.000000000 +0100
-+++ dhcpcd-8.1.6/src/dhcp6.c	2020-04-11 14:51:30.198495200 +0200
++++ dhcpcd-8.1.6/src/dhcp6.c	2020-04-17 15:46:07.596901235 +0200
 @@ -2466,6 +2466,7 @@
  static ssize_t
  dhcp6_writelease(const struct interface *ifp)
@@ -61,7 +61,7 @@ diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcp6.c dhcpcd-8.1.6/src/dhcp6.c
  		free(state->old);
 diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcp.c dhcpcd-8.1.6/src/dhcp.c
 --- dhcpcd-dhcpcd-8.1.6/src/dhcp.c	2020-01-27 21:22:21.000000000 +0100
-+++ dhcpcd-8.1.6/src/dhcp.c	2020-04-11 14:51:30.199495213 +0200
++++ dhcpcd-8.1.6/src/dhcp.c	2020-04-17 15:46:07.597901246 +0200
 @@ -1123,6 +1123,7 @@
  static ssize_t
  write_lease(const struct interface *ifp, const struct bootp *bootp, size_t len)
@@ -165,7 +165,7 @@ diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcp.c dhcpcd-8.1.6/src/dhcp.c
  
 diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcpcd.c dhcpcd-8.1.6/src/dhcpcd.c
 --- dhcpcd-dhcpcd-8.1.6/src/dhcpcd.c	2020-01-27 21:22:21.000000000 +0100
-+++ dhcpcd-8.1.6/src/dhcpcd.c	2020-04-11 14:51:30.200495226 +0200
++++ dhcpcd-8.1.6/src/dhcpcd.c	2020-04-17 15:46:07.598901257 +0200
 @@ -1989,6 +1989,7 @@
  		goto exit_failure;
  	}
@@ -176,7 +176,7 @@ diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcpcd.c dhcpcd-8.1.6/src/dhcpcd.c
  	ctx.options |= DHCPCD_STARTED;
 diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcp-common.c dhcpcd-8.1.6/src/dhcp-common.c
 --- dhcpcd-dhcpcd-8.1.6/src/dhcp-common.c	2020-01-27 21:22:21.000000000 +0100
-+++ dhcpcd-8.1.6/src/dhcp-common.c	2020-04-11 14:51:30.200495226 +0200
++++ dhcpcd-8.1.6/src/dhcp-common.c	2020-04-17 15:46:07.598901257 +0200
 @@ -158,8 +158,8 @@
  	return NULL;
  }
@@ -214,7 +214,7 @@ diff -rNu dhcpcd-dhcpcd-8.1.6/src/dhcp-common.c dhcpcd-8.1.6/src/dhcp-common.c
      const struct dhcp_opt *odopts, size_t odopts_len,
 diff -rNu dhcpcd-dhcpcd-8.1.6/src/duid.c dhcpcd-8.1.6/src/duid.c
 --- dhcpcd-dhcpcd-8.1.6/src/duid.c	2020-01-27 21:22:21.000000000 +0100
-+++ dhcpcd-8.1.6/src/duid.c	2020-04-11 14:51:30.200495226 +0200
++++ dhcpcd-8.1.6/src/duid.c	2020-04-17 15:46:07.599901268 +0200
 @@ -57,6 +57,7 @@
  #include "duid.h"
  #include "logerr.h"
@@ -259,7 +259,7 @@ diff -rNu dhcpcd-dhcpcd-8.1.6/src/duid.c dhcpcd-8.1.6/src/duid.c
  size_t duid_init(const struct interface *ifp)
 diff -rNu dhcpcd-dhcpcd-8.1.6/src/if-linux.c dhcpcd-8.1.6/src/if-linux.c
 --- dhcpcd-dhcpcd-8.1.6/src/if-linux.c	2020-01-27 21:22:21.000000000 +0100
-+++ dhcpcd-8.1.6/src/if-linux.c	2020-04-11 14:51:48.592729054 +0200
++++ dhcpcd-8.1.6/src/if-linux.c	2020-04-17 15:46:26.407127141 +0200
 @@ -364,13 +364,21 @@
  	 * pid that doesn't clash with a process id for after we fork. */
  	memset(&snl, 0, sizeof(snl));
@@ -283,20 +283,21 @@ diff -rNu dhcpcd-dhcpcd-8.1.6/src/if-linux.c dhcpcd-8.1.6/src/if-linux.c
  
  	ctx->link_fd = if_linksocket(&snl, NETLINK_ROUTE);
  	if (ctx->link_fd == -1)
-@@ -1505,6 +1513,12 @@
+@@ -1505,6 +1513,13 @@
  		return -1;
  #undef SF
  
 +#ifdef PACKET_IGNORE_OUTGOING
 +	n=1;
 +	if(setsockopt(s,SOL_PACKET,PACKET_IGNORE_OUTGOING,&s,sizeof(s)))
-+		goto eexit;
++		if(errno != EINVAL)
++			goto eexit;
 +#endif
 +
  	/* We cannot validate the correct interface,
  	 * so we MUST set this first. */
  	if (bind(s, &su.sa, sizeof(su.sll)) == -1)
-@@ -1955,6 +1969,7 @@
+@@ -1955,6 +1970,7 @@
  int
  ip6_forwarding(const char *ifname)
  {
@@ -304,7 +305,7 @@ diff -rNu dhcpcd-dhcpcd-8.1.6/src/if-linux.c dhcpcd-8.1.6/src/if-linux.c
  	char path[256];
  	int val;
  
-@@ -1963,6 +1978,9 @@
+@@ -1963,6 +1979,9 @@
  	snprintf(path, sizeof(path), "%s/%s/forwarding", p_conf, ifname);
  	val = check_proc_int(path);
  	return val == -1 ? 0 : val;
