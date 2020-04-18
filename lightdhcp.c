@@ -19,7 +19,7 @@
 #include <signal.h>
 #include <stdio.h>
 
-#define SOCKET		"/run/dhcpcd.sock"
+#define SOCKET		"/run/dhcpcd/sock"
 #define DHCPCD		"/sbin/dhcpcd"
 #define RESOLVCONF	"/etc/resolv.conf"
 #define CHRONYC		"/usr/bin/chronyc"

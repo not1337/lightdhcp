@@ -4,7 +4,7 @@
 # The contents of this file is licensed under the GPL version 2 or, at
 # your choice, any later version of this license.
 #
-DHCPCD=8.1.6
+DHCPCD=9.0.1
 OPTS=
 #
 # Enable the following for Raspberry Pi 4B
