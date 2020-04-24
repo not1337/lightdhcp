@@ -1,12 +1,45 @@
 diff -rNu dhcpcd-dhcpcd-9.0.1/configure.sh dhcpcd-9.0.1/configure.sh
 --- dhcpcd-dhcpcd-9.0.1/configure.sh	1970-01-01 01:00:00.000000000 +0100
-+++ dhcpcd-9.0.1/configure.sh	2020-04-18 13:09:55.459307435 +0200
++++ dhcpcd-9.0.1/configure.sh	2020-04-24 10:19:59.289739960 +0200
 @@ -0,0 +1,2 @@
 +#!/bin/sh
 +exec ./configure --dbdir=/var/lib/dhcpcd5 --disable-privsep --rundir=/run/dhcpcd --libexecdir=/lib/dhcpcd CFLAGS="-Os $* -DSCRIPT=NULL"
+diff -rNu dhcpcd-dhcpcd-9.0.1/src/arp.c dhcpcd-9.0.1/src/arp.c
+--- dhcpcd-dhcpcd-9.0.1/src/arp.c	2020-04-13 17:09:08.000000000 +0200
++++ dhcpcd-9.0.1/src/arp.c	2020-04-24 11:00:19.935273963 +0200
+@@ -560,6 +560,7 @@
+ void
+ arp_ifannounceaddr(struct interface *ifp, const struct in_addr *ia)
+ {
++#if 0
+ 	struct arp_state *astate;
+ 
+ 	if (ifp->flags & IFF_NOARP)
+@@ -573,11 +574,13 @@
+ 		astate->announced_cb = arp_free;
+ 	}
+ 	arp_announce(astate);
++#endif
+ }
+ 
+ void
+ arp_announceaddr(struct dhcpcd_ctx *ctx, const struct in_addr *ia)
+ {
++#if 0
+ 	struct interface *ifp, *iff = NULL;
+ 	struct ipv4_addr *iap;
+ 
+@@ -599,6 +602,7 @@
+ 		return;
+ 
+ 	arp_ifannounceaddr(iff, ia);
++#endif
+ }
+ 
+ void
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp6.c dhcpcd-9.0.1/src/dhcp6.c
 --- dhcpcd-dhcpcd-9.0.1/src/dhcp6.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/dhcp6.c	2020-04-18 13:09:38.142090806 +0200
++++ dhcpcd-9.0.1/src/dhcp6.c	2020-04-24 10:19:59.290739967 +0200
 @@ -2495,6 +2495,7 @@
  static ssize_t
  dhcp6_writelease(const struct interface *ifp)
@@ -61,7 +94,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp6.c dhcpcd-9.0.1/src/dhcp6.c
  		free(state->old);
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp.c dhcpcd-9.0.1/src/dhcp.c
 --- dhcpcd-dhcpcd-9.0.1/src/dhcp.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/dhcp.c	2020-04-18 13:09:38.144090832 +0200
++++ dhcpcd-9.0.1/src/dhcp.c	2020-04-24 10:19:59.292739979 +0200
 @@ -1145,6 +1145,7 @@
  static ssize_t
  write_lease(const struct interface *ifp, const struct bootp *bootp, size_t len)
@@ -165,7 +198,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp.c dhcpcd-9.0.1/src/dhcp.c
  
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcpcd.c dhcpcd-9.0.1/src/dhcpcd.c
 --- dhcpcd-dhcpcd-9.0.1/src/dhcpcd.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/dhcpcd.c	2020-04-18 13:09:38.144090832 +0200
++++ dhcpcd-9.0.1/src/dhcpcd.c	2020-04-24 10:19:59.293739985 +0200
 @@ -1963,6 +1963,7 @@
  #ifdef THERE_IS_NO_FORK
  	ctx.options &= ~DHCPCD_DAEMONISE;
@@ -176,7 +209,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcpcd.c dhcpcd-9.0.1/src/dhcpcd.c
  		logsetopts(logopts | LOGERR_DEBUG);
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp-common.c dhcpcd-9.0.1/src/dhcp-common.c
 --- dhcpcd-dhcpcd-9.0.1/src/dhcp-common.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/dhcp-common.c	2020-04-18 13:09:38.144090832 +0200
++++ dhcpcd-9.0.1/src/dhcp-common.c	2020-04-24 10:19:59.293739985 +0200
 @@ -158,8 +158,8 @@
  	return NULL;
  }
@@ -214,7 +247,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp-common.c dhcpcd-9.0.1/src/dhcp-common.c
      const struct dhcp_opt *odopts, size_t odopts_len,
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/duid.c dhcpcd-9.0.1/src/duid.c
 --- dhcpcd-dhcpcd-9.0.1/src/duid.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/duid.c	2020-04-18 13:09:38.145090845 +0200
++++ dhcpcd-9.0.1/src/duid.c	2020-04-24 10:19:59.293739985 +0200
 @@ -54,6 +54,7 @@
  #include "duid.h"
  #include "logerr.h"
@@ -259,7 +292,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/duid.c dhcpcd-9.0.1/src/duid.c
  size_t duid_init(const struct interface *ifp)
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/if-linux.c dhcpcd-9.0.1/src/if-linux.c
 --- dhcpcd-dhcpcd-9.0.1/src/if-linux.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/if-linux.c	2020-04-18 13:09:38.145090845 +0200
++++ dhcpcd-9.0.1/src/if-linux.c	2020-04-24 10:19:59.293739985 +0200
 @@ -391,13 +391,14 @@
  	 * pid that doesn't clash with a process id for after we fork. */
  	memset(&snl, 0, sizeof(snl));
@@ -308,3 +341,21 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/if-linux.c dhcpcd-9.0.1/src/if-linux.c
  }
  
  #endif /* INET6 */
+diff -rNu dhcpcd-dhcpcd-9.0.1/src/ipv6nd.c dhcpcd-9.0.1/src/ipv6nd.c
+--- dhcpcd-dhcpcd-9.0.1/src/ipv6nd.c	2020-04-13 17:09:08.000000000 +0200
++++ dhcpcd-9.0.1/src/ipv6nd.c	2020-04-24 11:09:13.749744088 +0200
+@@ -58,6 +58,14 @@
+ #include "route.h"
+ #include "script.h"
+ 
++#ifdef ND6_ADVERTISE
++#undef ND6_ADVERTISE
++#endif
++#ifndef SMALL
++#define SMALL
++#endif
++void ipv6nd_advertise(struct ipv6_addr *ia) {}
++
+ /* Debugging Router Solicitations is a lot of spam, so disable it */
+ //#define DEBUG_RS
+ 
