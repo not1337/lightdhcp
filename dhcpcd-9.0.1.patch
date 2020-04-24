@@ -1,12 +1,12 @@
 diff -rNu dhcpcd-dhcpcd-9.0.1/configure.sh dhcpcd-9.0.1/configure.sh
 --- dhcpcd-dhcpcd-9.0.1/configure.sh	1970-01-01 01:00:00.000000000 +0100
-+++ dhcpcd-9.0.1/configure.sh	2020-04-24 10:19:59.289739960 +0200
++++ dhcpcd-9.0.1/configure.sh	2020-04-24 13:17:13.320391794 +0200
 @@ -0,0 +1,2 @@
 +#!/bin/sh
 +exec ./configure --dbdir=/var/lib/dhcpcd5 --disable-privsep --rundir=/run/dhcpcd --libexecdir=/lib/dhcpcd CFLAGS="-Os $* -DSCRIPT=NULL"
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/arp.c dhcpcd-9.0.1/src/arp.c
 --- dhcpcd-dhcpcd-9.0.1/src/arp.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/arp.c	2020-04-24 11:00:19.935273963 +0200
++++ dhcpcd-9.0.1/src/arp.c	2020-04-24 13:17:13.321391807 +0200
 @@ -560,6 +560,7 @@
  void
  arp_ifannounceaddr(struct interface *ifp, const struct in_addr *ia)
@@ -39,7 +39,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/arp.c dhcpcd-9.0.1/src/arp.c
  void
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp6.c dhcpcd-9.0.1/src/dhcp6.c
 --- dhcpcd-dhcpcd-9.0.1/src/dhcp6.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/dhcp6.c	2020-04-24 10:19:59.290739967 +0200
++++ dhcpcd-9.0.1/src/dhcp6.c	2020-04-24 13:17:13.322391818 +0200
 @@ -2495,6 +2495,7 @@
  static ssize_t
  dhcp6_writelease(const struct interface *ifp)
@@ -94,7 +94,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp6.c dhcpcd-9.0.1/src/dhcp6.c
  		free(state->old);
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp.c dhcpcd-9.0.1/src/dhcp.c
 --- dhcpcd-dhcpcd-9.0.1/src/dhcp.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/dhcp.c	2020-04-24 10:19:59.292739979 +0200
++++ dhcpcd-9.0.1/src/dhcp.c	2020-04-24 13:17:13.324391843 +0200
 @@ -1145,6 +1145,7 @@
  static ssize_t
  write_lease(const struct interface *ifp, const struct bootp *bootp, size_t len)
@@ -198,7 +198,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp.c dhcpcd-9.0.1/src/dhcp.c
  
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcpcd.c dhcpcd-9.0.1/src/dhcpcd.c
 --- dhcpcd-dhcpcd-9.0.1/src/dhcpcd.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/dhcpcd.c	2020-04-24 10:19:59.293739985 +0200
++++ dhcpcd-9.0.1/src/dhcpcd.c	2020-04-24 13:17:13.324391843 +0200
 @@ -1963,6 +1963,7 @@
  #ifdef THERE_IS_NO_FORK
  	ctx.options &= ~DHCPCD_DAEMONISE;
@@ -209,7 +209,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcpcd.c dhcpcd-9.0.1/src/dhcpcd.c
  		logsetopts(logopts | LOGERR_DEBUG);
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp-common.c dhcpcd-9.0.1/src/dhcp-common.c
 --- dhcpcd-dhcpcd-9.0.1/src/dhcp-common.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/dhcp-common.c	2020-04-24 10:19:59.293739985 +0200
++++ dhcpcd-9.0.1/src/dhcp-common.c	2020-04-24 13:17:13.324391843 +0200
 @@ -158,8 +158,8 @@
  	return NULL;
  }
@@ -247,7 +247,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/dhcp-common.c dhcpcd-9.0.1/src/dhcp-common.c
      const struct dhcp_opt *odopts, size_t odopts_len,
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/duid.c dhcpcd-9.0.1/src/duid.c
 --- dhcpcd-dhcpcd-9.0.1/src/duid.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/duid.c	2020-04-24 10:19:59.293739985 +0200
++++ dhcpcd-9.0.1/src/duid.c	2020-04-24 13:17:13.324391843 +0200
 @@ -54,6 +54,7 @@
  #include "duid.h"
  #include "logerr.h"
@@ -292,7 +292,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/duid.c dhcpcd-9.0.1/src/duid.c
  size_t duid_init(const struct interface *ifp)
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/if-linux.c dhcpcd-9.0.1/src/if-linux.c
 --- dhcpcd-dhcpcd-9.0.1/src/if-linux.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/if-linux.c	2020-04-24 10:19:59.293739985 +0200
++++ dhcpcd-9.0.1/src/if-linux.c	2020-04-24 13:17:13.324391843 +0200
 @@ -391,13 +391,14 @@
  	 * pid that doesn't clash with a process id for after we fork. */
  	memset(&snl, 0, sizeof(snl));
@@ -343,7 +343,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/if-linux.c dhcpcd-9.0.1/src/if-linux.c
  #endif /* INET6 */
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/ipv6nd.c dhcpcd-9.0.1/src/ipv6nd.c
 --- dhcpcd-dhcpcd-9.0.1/src/ipv6nd.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/ipv6nd.c	2020-04-24 11:09:13.749744088 +0200
++++ dhcpcd-9.0.1/src/ipv6nd.c	2020-04-24 13:17:13.325391855 +0200
 @@ -58,6 +58,14 @@
  #include "route.h"
  #include "script.h"
@@ -359,3 +359,55 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/ipv6nd.c dhcpcd-9.0.1/src/ipv6nd.c
  /* Debugging Router Solicitations is a lot of spam, so disable it */
  //#define DEBUG_RS
  
+diff -rNu dhcpcd-dhcpcd-9.0.1/src/route.c dhcpcd-9.0.1/src/route.c
+--- dhcpcd-dhcpcd-9.0.1/src/route.c	2020-04-13 17:09:08.000000000 +0200
++++ dhcpcd-9.0.1/src/route.c	2020-04-24 14:12:45.124049261 +0200
+@@ -679,14 +679,28 @@
+ void
+ rt_build(struct dhcpcd_ctx *ctx, int af)
+ {
+-	rb_tree_t routes, added, kroutes;
++	static int valid4=0, valid6=0;
++	int *valid;
++	static rb_tree_t lclkroutes4, lclkroutes6;
++	rb_tree_t routes, added;
++	rb_tree_t *kroutes;
+ 	struct rt *rt, *rtn;
+ 	unsigned long long o;
+ 
++	if(af==AF_INET) {
++		valid=&valid4;
++		kroutes=&lclkroutes4;
++	} else {
++		valid=&valid6;
++		kroutes=&lclkroutes6;
++	}
+ 	rb_tree_init(&routes, &rt_compare_proto_ops);
+ 	rb_tree_init(&added, &rt_compare_os_ops);
+-	rb_tree_init(&kroutes, &rt_compare_os_ops);
+-	if_initrt(ctx, &kroutes, af);
++	if(!*valid) {
++		rb_tree_init(kroutes, &rt_compare_os_ops);
++		if_initrt(ctx, kroutes, af);
++		*valid=1;
++	}
+ 	ctx->rt_order = 0;
+ 	ctx->options |= DHCPCD_RTBUILD;
+ 
+@@ -718,7 +732,7 @@
+ 		/* Is this route already in our table? */
+ 		if (rb_tree_find_node(&added, rt) != NULL)
+ 			continue;
+-		if (rt_doroute(&kroutes, rt)) {
++		if (rt_doroute(kroutes, rt)) {
+ 			rb_tree_remove_node(&routes, rt);
+ 			if (rb_tree_insert_node(&added, rt) != rt) {
+ 				errno = EEXIST;
+@@ -766,5 +780,6 @@
+ 
+ getfail:
+ 	rt_headclear(&routes, AF_UNSPEC);
+-	rt_headclear(&kroutes, AF_UNSPEC);
++	if(!*valid)
++		rt_headclear(kroutes, AF_UNSPEC);
+ }
