@@ -292,7 +292,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/duid.c dhcpcd-9.0.1/src/duid.c
  size_t duid_init(const struct interface *ifp)
 diff -rNu dhcpcd-dhcpcd-9.0.1/src/if-linux.c dhcpcd-9.0.1/src/if-linux.c
 --- dhcpcd-dhcpcd-9.0.1/src/if-linux.c	2020-04-13 17:09:08.000000000 +0200
-+++ dhcpcd-9.0.1/src/if-linux.c	2020-04-24 13:17:13.324391843 +0200
++++ dhcpcd-9.0.1/src/if-linux.c	2020-04-30 20:24:15.157747120 +0200
 @@ -391,13 +391,14 @@
  	 * pid that doesn't clash with a process id for after we fork. */
  	memset(&snl, 0, sizeof(snl));
@@ -323,7 +323,30 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/if-linux.c dhcpcd-9.0.1/src/if-linux.c
  	/* We cannot validate the correct interface,
  	 * so we MUST set this first. */
  	if (bind(s, &su.sa, sizeof(su.sll)) == -1)
-@@ -2064,6 +2072,7 @@
+@@ -1998,11 +2006,14 @@
+ int
+ if_applyra(const struct ra *rap)
+ {
++#if 0
+ 	char path[256];
+ 	const char *ifname = rap->iface->name;
+ 	struct dhcpcd_ctx *ctx = rap->iface->ctx;
++#endif
+ 	int error = 0;
+ 
++#if 0
+ 	snprintf(path, sizeof(path), "%s/%s/hop_limit", p_conf, ifname);
+ 	if (if_writepathuint(ctx, path, rap->hoplimit) == -1)
+ 		error = -1;
+@@ -2015,6 +2026,7 @@
+ 	    p_neigh, ifname);
+ 	if (if_writepathuint(ctx, path, rap->reachable) == -1)
+ 		error = -1;
++#endif
+ 
+ 	return error;
+ }
+@@ -2064,6 +2076,7 @@
  int
  ip6_forwarding(const char *ifname)
  {
@@ -331,7 +354,7 @@ diff -rNu dhcpcd-dhcpcd-9.0.1/src/if-linux.c dhcpcd-9.0.1/src/if-linux.c
  	char path[256];
  	int val;
  
-@@ -2072,6 +2081,9 @@
+@@ -2072,6 +2085,9 @@
  	snprintf(path, sizeof(path), "%s/%s/forwarding", p_conf, ifname);
  	val = check_proc_int(path);
  	return val == -1 ? 0 : val;
